@@ -37,7 +37,7 @@ if __name__ == '__main__':
     info( '*** Creating network\n' )
     OVSSwitch13 = partial( OVSSwitch, protocols='OpenFlow13' )
     controllerIp = socket.gethostbyname( 'onos-openflow.default.svc.cluster.local' )
-    net = Mininet( topo=SingleSwitchTopo(1),
+    net = Mininet( topo=SingleSwitchTopo(2),
                    controller=lambda name: RemoteController( name, ip=controllerIp, port=6653 ),
                    switch=OVSSwitch13
     )
@@ -58,6 +58,15 @@ if __name__ == '__main__':
     bgphost.cmd( 'ifconfig h1-eth0.222.111 172.18.0.10/24' )
     bgphost.cmd( 'dnsmasq --dhcp-range=172.18.0.50,172.18.0.150,12h' )
 
+    bgphost2 = net.hosts [ 1 ]
+    info( '*** Adding VLAN interface to host2\n')
+    bgphost2.cmd( 'ip link add link h2-eth0 name h2-eth0.888 type vlan id 888' )
+    bgphost2.cmd( 'ip link add link h2-eth0.888 name h2-eth0.888.777 type vlan id 777' )
+    bgphost2.cmd( 'ifconfig h2-eth0.888 up' )
+    bgphost2.cmd( 'ifconfig h2-eth0.888.777 up' )
+    bgphost2.cmd( 'ifconfig h2-eth0.888.777 172.18.0.20/24' )
+    bgphost2.cmd( 'dnsmasq --dhcp-range=172.18.0.101,172.18.0.150,12h' )
+    
     net.start()
     CLI( net )
     net.stop()
