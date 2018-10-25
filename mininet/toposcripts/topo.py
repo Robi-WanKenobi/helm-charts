@@ -52,15 +52,10 @@ if __name__ == '__main__':
     bgphost = net.hosts [ 0 ]
     info( '*** Adding VLAN interface to host\n')
     bgphost.cmd( 'ip link add link h1-eth0 name h1-eth0.222 type vlan id 222' )
-    bgphost.cmd( 'ip link add link h1-eth0 name h1-eth0.888 type vlan id 888' )
     bgphost.cmd( 'ip link add link h1-eth0.222 name h1-eth0.222.111 type vlan id 111' )
-    bgphost.cmd( 'ip link add link h1-eth0.888 name h1-eth0.888.777 type vlan id 777' )
     bgphost.cmd( 'ifconfig h1-eth0.222 up' )
     bgphost.cmd( 'ifconfig h1-eth0.222.111 up' )
     bgphost.cmd( 'ifconfig h1-eth0.222.111 172.18.0.10/24' )
-    bgphost.cmd( 'ifconfig h1-eth0.888 up' )
-    bgphost.cmd( 'ifconfig h1-eth0.888.777 up' )
-    bgphost.cmd( 'ifconfig h1-eth0.888.777 172.18.0.20/24' )
     bgphost.cmd( 'dnsmasq --dhcp-range=172.18.0.50,172.18.0.100,12h' )
     
     net.start()
